@@ -75,16 +75,6 @@ Name the evidence that the sentence is true.
 If no evidence exists, design as if the sentence were absent.
 Stop when the sentence names evidence or the design no longer relies on the sentence.
 
-# Record a rule after a repeated mistake
-
-Trigger: Codex makes the same mistake twice in one session, or the user says that Codex made the same mistake before.
-Search the AGENTS.md files for a rule that already covers the class of mistake.
-If a rule covers the class of mistake, edit that rule instead of adding a rule.
-If no rule covers the class of mistake, add a rule.
-State the action that prevents the class of mistake.
-Do not record the incident.
-Stop when the rule states an action.
-
 # Do not consider half-measures
 
 A half-measure is a choice that does not address the root cause of the problem.
