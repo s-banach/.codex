@@ -281,12 +281,10 @@ Do not apply these rules to third-party tools such as `git` and `pytest`.
 5. Make runners idempotent where the job allows. Ensure that rerunning the same zero-argument command with the same committed configuration produces the same final state after an interruption. Do not treat the existence of output as evidence that the output is complete.
 6. When editing a module with an argument-driven entrypoint, convert the entrypoint in the same change.
 
-# Never name a commit sha
+# Do not cite a commit sha in a commit message
 
-Trigger: Codex is about to write a commit sha in a commit message, code comment, docstring, or tracked file.
-After a rebase, squash, or amend, a commit sha can refer to a commit outside the resulting history.
-Write what the commit did, or write nothing.
-Naming a commit sha in chat to identify a commit under discussion is allowed.
+Trigger: Codex is about to cite a commit sha in a commit message to identify an earlier change.
+Describe what the earlier change did without naming the commit sha.
 
 # Before running `git add`
 
