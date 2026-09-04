@@ -342,14 +342,13 @@ Use the same two reviewer agents throughout the review cycle.
 Spawn two new reviewer agents for the next change.
 After creating the first commit of a change, spawn `commit-correctness-reviewer` and `commit-simplicity-reviewer` concurrently.
 Give each reviewer agent a prompt that names the commit sha and states the change's root goal in one sentence.
+Omit model and reasoning effort overrides unless the user explicitly requests them.
 Each reviewer agent reports only its own scope.
 After sending a commit to the reviewer agents, wait for both reports and resolve both.
-Either reviewer agent may raise one design objection where the diff treats a symptom of the root goal.
-`commit-correctness-reviewer` may also raise one design objection where a premise yields a wrong result.
-`commit-simplicity-reviewer` may also raise one design objection where a premise imposes a lasting cost on callers.
+Evaluate design objections against the root goal and the evidence in the review.
+Consider a refactor beyond the diff when its concrete benefit justifies its scope and risk.
 Where both reviewer agents object to one premise, resolve the premise once.
 Before spawning the reviewer agents, confirm that the project's checks report zero errors and complete the pre-staging pass in "Before running `git add`" for every staged file.
-The reviewer agents perform the second pass, which allows rule 2 for each reviewer agent to forbid rerunning the checks.
 Fix the findings in a new commit.
 Send a fix commit that changes behavior or prose to both reviewer agents.
 Never amend a reviewed commit because a review names a sha and an amend moves the code out from under the review that passed.
