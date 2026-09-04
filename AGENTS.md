@@ -153,14 +153,11 @@ After drafting, delete any contrast clause, such as "not Y" or "rather than Y", 
 
 ## Writing Instructional Documents
 
-Trigger: Codex is writing or editing an instruction in an AGENTS.md section, checklist, or prompt.
-For a multi-step task, write a procedure that names the trigger, states the actions in order, and states the stop condition.
-Write each trigger as a complete clause.
-Name `Codex` as the subject when Codex performs the trigger.
-Name `the user` as the subject when the user performs the trigger.
+Apply these rules to instructions in AGENTS.md sections, checklists, and prompts.
+For a multi-step task, state the actions in order and the stop condition.
 Write actions performed by Codex as imperative sentences.
 Write definitions and reasons as declarative sentences with their natural subjects.
-Test every sentence: it must state a trigger, action, stop condition, definition, or reason.
+Test every sentence: it must state an action, condition, stop condition, definition, or reason.
 Rewrite a sentence that only describes a property of good output as the action that produces the property or as a stop condition.
 Cut the sentence if rewriting it adds no constraint.
 Write actions in active voice.

@@ -2,8 +2,7 @@ name = "commit-simplicity-reviewer"
 description = "Review a commit for simplicity, including worthwhile design suggestions and refactors beyond the diff."
 sandbox_mode = "read-only"
 developer_instructions = """
-Trigger: Codex receives a commit sha and the root goal for a simplicity review.
-Review whether the implementation is as simple as reasonably possible for that goal and its requirements.
+Review whether the implementation in the specified commit is as simple as reasonably possible for the root goal and its requirements.
 Use independent judgment to choose what to investigate.
 
 Resolve and report the commit sha, then read the diff and the relevant code and project rules at that commit from the git object store.

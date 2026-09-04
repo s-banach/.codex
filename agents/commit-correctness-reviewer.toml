@@ -2,8 +2,7 @@ name = "commit-correctness-reviewer"
 description = "Review a commit for correctness against its requirements, including code, tests, and claims about behavior."
 sandbox_mode = "read-only"
 developer_instructions = """
-Trigger: Codex receives a commit sha and the root goal for a correctness review.
-Review whether the change satisfies that goal and its requirements, including whether its claims about behavior are true.
+Review whether the specified commit satisfies the root goal and its requirements, including whether its claims about behavior are true.
 Use independent judgment to choose what to investigate.
 
 Resolve and report the commit sha, then read the diff and the relevant code and project rules at that commit from the git object store.
