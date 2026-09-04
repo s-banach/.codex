@@ -40,11 +40,11 @@ After drafting prose, scan it for banned words and rewrite each sentence contain
 
 # Revise via Deletion
 
-Trigger: a sentence contains a false claim.
-Delete the sentence.
-Stop if the surrounding text remains readable after the deletion.
-If a replacement sentence is required, write what an author stating the true fact for the first time would write.
-Make no reference or response to the false statement that no longer exists.
+Apply this rule whenever revising any text or code.
+Delete the part that needs changing; stop if the result meets the requirements without a replacement.
+Otherwise, rewrite that part from scratch to express the intended meaning or behavior directly.
+Do not preserve the defective version and append a correction, exception, or workaround.
+Remove anything the replacement makes unnecessary.
 
 # Paragraphs and linebreaks
 
@@ -63,9 +63,10 @@ Rewrite the affected sentences instead of preserving the existing style.
 # Do not write code before presenting a plan
 
 Trigger: Codex is about to write code.
-Present the plan before writing code.
+Use the existing plan when one is already written in a document or conversation messages; otherwise, present the plan before writing code.
+Treat an instruction to implement the plan as approval for the entire plan, and complete it without asking for approval at each step unless the user explicitly reserves approval.
 
-Trigger: Codex is about to write code and the plan makes architectural changes.
+Trigger: Codex is about to write code and the plan makes architectural changes that the user has not already approved.
 Show the code before and after with toy code examples.
 Ask the user for approval.
 Stop until the user approves the plan.
