@@ -15,9 +15,7 @@ Use a role name such as `reader` or `observer` when an instruction applies to th
 
 Use exactly one name for every concept, verbatim in every context.
 When prose refers to something with a literal form in the codebase, such as an identifier, path, filename, command, or flag, write that literal form and never write an English paraphrase.
-An English paraphrase forces the reader to guess which thing the prose means.
 For a concept without a literal form, pick one plain description and repeat it.
-Do not vary wording for style.
 Do not invent a label where the plain description works.
 
 ## No metaphors
@@ -54,12 +52,6 @@ Break lines only at sentence boundaries.
 Never wrap at a fixed column width.
 Apply this rule to prose in every context, including code comments, docstrings, and prose string literals.
 
-Trigger: Codex is writing or editing a markdown document or commit message.
-Ensure that the markdown document or commit message contains no linebreak in the middle of a sentence.
-
-Trigger: Codex is editing a file that has linebreaks in the middle of a sentence.
-Rewrite the affected sentences instead of preserving the existing style.
-
 # Do not write code before presenting a plan
 
 Trigger: Codex is about to write code.
@@ -78,13 +70,9 @@ Name the evidence that the sentence is true.
 If no evidence exists, design as if the sentence were absent.
 Stop when the sentence names evidence or the design no longer relies on the sentence.
 
-# Do not consider half-measures
+# Address the root cause
 
-A half-measure is a choice that does not address the root cause of the problem.
-Trigger: Codex discovers an obstacle while editing code and is about to present the user with multiple choices.
-Do not consider a half-measure.
-Present only solutions that address the root cause of the problem.
-Stop when every considered solution addresses the root cause of the problem.
+When presenting solutions, include only solutions that address the root cause of the problem.
 
 # Raise a contradiction instead of working around it
 
@@ -104,7 +92,6 @@ Stop when the construct is absent or every redesign Codex can name makes the cod
 # Style Guide
 
 Apply this style guide to all prose: chat, code comments, docstrings, docs, commits, PRs, reports, headings, tables, and examples.
-Do not match the style of surrounding text.
 Follow these rules when the surrounding text differs.
 
 ## Naming variables and functions
@@ -130,7 +117,6 @@ Trigger: Codex is drafting or revising prose.
 Organize each sentence around one main point.
 Combine closely related claims when their relationship is clearer in one sentence.
 Split a sentence when its clauses introduce unrelated points or make it hard to follow.
-Stop when the reader can follow each sentence without losing the connection between ideas.
 
 ## Prefer clear actors and direct verbs
 
@@ -138,7 +124,6 @@ Trigger: Codex is revising prose in which the actor or action is unclear.
 Prefer an explicit subject and a direct verb when they clarify who does what.
 Keep a natural noun phrase or passive construction when the actor is unknown, irrelevant, or already clear.
 For example, replace "The opinion does not explain whether the judge's split of the sentence is licensed by the statute." with "The opinion does not explain whether the judge may split the sentence under the statute."
-Stop when the reader can identify the action and any actor needed to understand it.
 
 ## Fix a flagged term everywhere in its scope
 
@@ -185,7 +170,6 @@ A truncated list proves nothing about the omitted lines.
 Then write what changed instead of claiming completion.
 Do not write a count of sites, files, or occurrences because a count is a second claim and gives the reader nothing unavailable from the diff.
 Name the categories edited instead.
-Stop when the sentence states the edits made.
 
 # Check before writing that something is unavailable or impossible
 
@@ -276,9 +260,9 @@ Configuration that exists only in the invocation is uncommitted and unreviewed, 
 Apply these rules to project scripts.
 Do not apply these rules to third-party tools such as `git` and `pytest`.
 
-1. Store configuration in the script as named data, such as a constant, tuple, or table. Make the entrypoint take zero arguments: `python -m package.runner`. Keep keyword parameters with committed defaults so tests and programmatic callers can pass configuration directly.
+1. Store configuration in the script as named data, such as a constant, tuple, or table. Make the entrypoint take zero arguments: `python -m package.runner`. Allow argument parsing only in read-only diagnostics, where a wrong argument produces a visible error and no state change. Keep keyword parameters with committed defaults so tests and programmatic callers can pass configuration directly.
 2. Enumerate multi-run jobs, such as variables, windows, or targets, as data in the script and iterate. Do not assemble runs in a shell loop.
-3. Make state-changing scripts take no arguments. Allow argument parsing only in read-only diagnostics, where a wrong argument produces a visible error and no state change. To narrow a state-changing run while debugging, edit the committed run data and revert after the run. The edit must appear in `git diff` so the edit cannot silently persist.
+3. To narrow a state-changing run while debugging, edit the committed run data and revert after the run. The edit must appear in `git diff` so the edit cannot silently persist.
 4. Apply rules 1 through 3 to every transient channel. Treat passing configuration to a state-changing entrypoint through `python -c "main(source=...)"`, a REPL, or a heredoc as equivalent to argv.
 5. Make runners idempotent where the job allows. Ensure that rerunning the same zero-argument command with the same committed configuration produces the same final state after an interruption. Do not treat the existence of output as evidence that the output is complete.
 6. When editing a module with an argument-driven entrypoint, convert the entrypoint in the same change.
@@ -342,7 +326,6 @@ After creating the first commit of a change, spawn `commit-correctness-reviewer`
 Give each reviewer agent a prompt that names the commit sha and states the change's root goal in one sentence.
 Omit model and reasoning effort overrides unless the user explicitly requests them.
 Each reviewer agent reports only its own scope.
-After sending a commit to the reviewer agents, wait for both reports and resolve both.
 Evaluate design objections against the root goal and the evidence in the review.
 Consider a refactor beyond the diff when its concrete benefit justifies its scope and risk.
 Where both reviewer agents object to one premise, resolve the premise once.
@@ -357,10 +340,6 @@ Do not start the next change until the current review cycle passes the Done gate
 The Done gate passes only after both reviews have returned, confirmed issues are fixed, and every objection is resolved.
 Resolve an objection by adopting it through an edit to what its premise challenges or declining it with a reason stated to the user.
 Never write a declined objection into the repository.
-Do not defer an objection.
-
-When a finding says a comment or docstring sentence is inaccurate, delete the sentence unless it states a constraint, reason, or behavior a reader acts on.
-Rewriting the sentence requires another review round and risks a fresh inaccuracy.
 
 ## Fix a defect for every input that produces it
 
