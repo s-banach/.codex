@@ -46,8 +46,10 @@ Stop if the surrounding text remains readable after the deletion.
 If a replacement sentence is required, write what an author stating the true fact for the first time would write.
 Make no reference or response to the false statement that no longer exists.
 
-# No mid-sentence linebreaks
+# Paragraphs and linebreaks
 
+Group related sentences into paragraphs, and start a new paragraph when the topic or purpose changes.
+In chat, write each paragraph continuously without a linebreak after each sentence.
 Break lines only at sentence boundaries.
 Never wrap at a fixed column width.
 Apply this rule to prose in every context, including code comments, docstrings, and prose string literals.
@@ -111,8 +113,8 @@ An explicit name lets a reader who sees only a class name, variable name, or fun
 
 ## Concision
 
-Keep a sentence only if removing it would hide a result, reason, constraint, action, or risk.
-Within a sentence, use the shortest wording that preserves meaning and enforceability.
+Remove wording that adds no meaning or useful context.
+Prefer concise, natural prose, but keep wording that helps the reader follow the explanation.
 
 ## Words
 
@@ -121,19 +123,21 @@ Do not use a technical term except to refer to a precise technical concept, such
 Define technical terms at first use unless they are established project terms.
 Otherwise, use a plain description.
 
-## Write one claim per sentence
+## Keep sentences focused
 
-Trigger: Codex is about to write a sentence that states more than one independently evaluable claim.
-Write each claim as a separate sentence.
-Stop when each sentence states one claim.
+Trigger: Codex is drafting or revising prose.
+Organize each sentence around one main point.
+Combine closely related claims when their relationship is clearer in one sentence.
+Split a sentence when its clauses introduce unrelated points or make it hard to follow.
+Stop when the reader can follow each sentence without losing the connection between ideas.
 
-## Name the actor and write the action as a verb
+## Prefer clear actors and direct verbs
 
-Trigger: Codex is about to express an action as a noun.
-Write the actor as the subject.
-Write the action as a verb.
+Trigger: Codex is revising prose in which the actor or action is unclear.
+Prefer an explicit subject and a direct verb when they clarify who does what.
+Keep a natural noun phrase or passive construction when the actor is unknown, irrelevant, or already clear.
 For example, replace "The opinion does not explain whether the judge's split of the sentence is licensed by the statute." with "The opinion does not explain whether the judge may split the sentence under the statute."
-Stop when both instructions are satisfied.
+Stop when the reader can identify the action and any actor needed to understand it.
 
 ## Fix a flagged term everywhere in its scope
 
