@@ -76,7 +76,7 @@ When presenting solutions, include only solutions that address the root cause of
 
 # Raise a contradiction instead of working around it
 
-Trigger: a request contradicts itself or an instruction already in force.
+Trigger: the user's requirements conflict, and the user's latest instruction does not resolve the conflict.
 Name the contradiction.
 Ask the user which requirement controls before writing code.
 Do not invent an exception that narrows the request.
@@ -181,7 +181,7 @@ If the check confirms the claim, name what was checked.
 # Read code before making claims about it
 
 Trigger: Codex is about to make a statement about code X while planning, reviewing a plan, or reviewing code.
-Read code X and all code that code X depends on before making the statement.
+Read code X and the dependencies needed to verify the statement before making it.
 
 # Long processes must be observable and recoverable
 
@@ -193,7 +193,7 @@ Select a mechanism appropriate for the process, such as a counter with a rate fo
 
 ## Start a durable completion watcher
 
-Trigger: Codex starts or resumes a process outside the foreground.
+Trigger: Codex starts or resumes a process outside the foreground that is expected to run longer than a few minutes.
 Check `screen -ls` for the exact session name.
 Start a detached `screen` session when none exists.
 Make `screen` own the long process, PID-bound `caffeinate`, and completion watcher.
@@ -213,7 +213,7 @@ Verify each recorded PID, command, and process-start identity.
 Verify that `screen` is every recorded process's ancestor.
 Verify that `caffeinate` asserts for the long process PID.
 Verify that `screen -ls` shows the exact session name.
-Stop after reporting every launch check.
+Report every launch check, then return to the calling procedure.
 
 ### Inspect completion
 
@@ -221,7 +221,7 @@ Trigger: either the user requests status or completion evidence appears.
 Read the persistent status files.
 If no exit status exists, run `Verify launch`.
 If an exit status exists, verify expected process termination and final log output.
-Stop after reporting the current state.
+Report the current state, then continue any remaining authorized work.
 
 # Grep and Glob: Scope every search
 
@@ -265,7 +265,7 @@ Do not apply these rules to third-party tools such as `git` and `pytest`.
 3. To narrow a state-changing run while debugging, edit the committed run data and revert after the run. The edit must appear in `git diff` so the edit cannot silently persist.
 4. Apply rules 1 through 3 to every transient channel. Treat passing configuration to a state-changing entrypoint through `python -c "main(source=...)"`, a REPL, or a heredoc as equivalent to argv.
 5. Make runners idempotent where the job allows. Ensure that rerunning the same zero-argument command with the same committed configuration produces the same final state after an interruption. Do not treat the existence of output as evidence that the output is complete.
-6. When editing a module with an argument-driven entrypoint, convert the entrypoint in the same change.
+6. When editing a module whose entrypoint violates this argument policy, convert the entrypoint in the same change.
 
 # Do not cite a commit sha in a commit message
 
@@ -350,8 +350,8 @@ Fix every input that produces the defect, not only the cited input.
 ## Verify a fix with the check that found the defect
 
 Trigger: Codex is about to commit a fix for a review finding.
-Run the reviewer's check.
-Confirm that the check fails on the parent and passes on the fix.
+Verify that the reviewer's stated problem exists in the parent and is resolved by the fix.
+When the finding includes an executable check, run it on both versions and confirm that it fails on the parent and passes on the fix.
 
 ## Check a proposed sentence against its file before adopting it
 
