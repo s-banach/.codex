@@ -313,31 +313,42 @@ Do not complete the task until the required CI check passes.
 
 # One review cycle per change
 
+Treat a completed, self-contained feature, fix, or refactor, including its tests and documentation, as one change.
+Complete the implementation steps within a change before starting its review cycle.
+
 Trigger: Codex has executed a task or plan, and `git status --short --untracked-files=all` lists a path changed by the task.
 Commit and review every path changed by the task.
 Do not include an intentionally uncommitted path unless the user explicitly included it in the task.
 Stop only when `git status --short --untracked-files=all` lists no path other than an intentionally uncommitted path, each intentionally uncommitted path is unstaged, and the Done gate passes.
 
+Select reviewer agents for the completed change.
+Use no reviewer agent when the change preserves behavior and meaning, can be verified directly, and makes no consequential design choices; otherwise, use `commit-correctness-reviewer`.
+Add `commit-simplicity-reviewer` when the change makes consequential design choices for which a simpler alternative could materially reduce complexity.
+State the selection and its reason in one sentence.
+Complete the pre-staging review and applicable checks even when no reviewer agent is selected.
+
 A review cycle covers one change: the first commit, fix commits produced by reviews, and reviews of those fix commits.
-The review cycle ends at the squash.
-Use the same two reviewer agents throughout the review cycle.
-Spawn two new reviewer agents for the next change.
-After creating the first commit of a change, spawn `commit-correctness-reviewer` and `commit-simplicity-reviewer` concurrently.
+The review cycle ends when the Done gate passes and any fix commits have been squashed.
+Reuse each selected reviewer agent throughout the review cycle.
+Use new reviewer agents for the next change when review selection requires them.
+After creating the first commit of a change, spawn the selected reviewer agents concurrently.
 Give each reviewer agent a prompt that names the commit sha and states the change's root goal in one sentence.
-Omit model and reasoning effort overrides unless the user explicitly requests them.
+For correctness review of low-complexity changes, optionally use `gpt-5.6-terra` with `medium` reasoning effort.
+Judge complexity by the reasoning needed to verify the change, including its interactions and failure cases.
+Otherwise, omit model and reasoning effort overrides unless the user explicitly requests them.
 Each reviewer agent reports only its own scope.
 Evaluate design objections against the root goal and the evidence in the review.
 Consider a refactor beyond the diff when its concrete benefit justifies its scope and risk.
 Where both reviewer agents object to one premise, resolve the premise once.
 Before spawning the reviewer agents, confirm that the project's checks report zero errors and complete the pre-staging pass in "Before running `git add`" for every staged file.
 Fix the findings in a new commit.
-Send a fix commit that changes behavior or prose to both reviewer agents.
+Send a fix commit that changes behavior or prose to each selected reviewer agent whose scope it affects.
 Never amend a reviewed commit because a review names a sha and an amend moves the code out from under the review that passed.
 Close a fix commit without review only when the fix changes no behavior and no prose, such as whitespace or a private rename with no callers.
-Squash the chain into one commit at the end of the review cycle so one feature is one commit.
+After the Done gate passes, squash any fix commits so one change is one commit.
 Do not start the next change until the current review cycle passes the Done gate.
 
-The Done gate passes only after both reviews have returned, confirmed issues are fixed, and every objection is resolved.
+The Done gate passes only after the pre-staging review and applicable checks are complete, requested reviews have returned, confirmed issues are fixed, and every objection is resolved.
 Resolve an objection by adopting it through an edit to what its premise challenges or declining it with a reason stated to the user.
 Never write a declined objection into the repository.
 
