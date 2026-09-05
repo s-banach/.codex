@@ -161,6 +161,10 @@ Trigger: Codex is writing a docstring or comment and types an identifier that is
 Open the identifier's definition before finishing the sentence, or cut the reference.
 Write a behavior claim only after naming the evidence that the claim is true.
 
+# Use `openai-docs` only when needed
+
+Do not read the `openai-docs` skill when the conversation, available tool definitions, or inspected local files already provide enough information to answer the user's question.
+
 # Scope searches and support conclusions
 
 Search named files or relevant subdirectories when their location is known.
