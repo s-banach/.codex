@@ -377,3 +377,11 @@ Stop when the sentence contradicts nothing checked.
 Trigger: while working on a plan, Codex discovers a time-consuming subtask that will distract from the main plan.
 Spawn an agent to solve the subtask so Codex can stay focused on the main plan.
 Caveat: Only spawn an agent if the subtask is really off-topic, not if it is naturally part of the main plan.
+
+For an agent spawned under this section, select the model by the reasoning the subtask requires:
+
+- Use `gpt-5.6-terra` with `medium` reasoning effort for routine subtasks with clear steps and little judgment.
+- Use `gpt-5.6-sol` with `medium` reasoning effort for nontrivial subtasks that require judgment across several steps.
+- Use `gpt-6-astra` with `medium` reasoning effort for difficult subtasks that require substantial planning and complex reasoning, including long-running work with these requirements.
+
+Choose the model for the most demanding part of the subtask.
