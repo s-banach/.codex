@@ -161,15 +161,19 @@ Trigger: Codex is writing a docstring or comment and types an identifier that is
 Open the identifier's definition before finishing the sentence, or cut the reference.
 Write a behavior claim only after naming the evidence that the claim is true.
 
-# Never claim a sweep is complete
+# Scope searches and support conclusions
 
-Trigger: Codex is about to write that every occurrence of something is fixed, found, or gone.
-Apply this rule to chat, commit messages, and reports.
-Rerun the search with no result limit and read every returned line.
-A truncated list proves nothing about the omitted lines.
-Then write what changed instead of claiming completion.
-Do not write a count of sites, files, or occurrences because a count is a second claim and gives the reader nothing unavailable from the diff.
-Name the categories edited instead.
+Search named files or relevant subdirectories when their location is known.
+Otherwise, search from the repository root with ignore rules enabled, then narrow subsequent searches using the results.
+
+Inspect ignored files when the task requires them.
+
+Limit search output when examples are sufficient.
+When a conclusion depends on examining every match, inspect complete output before drawing that conclusion.
+If the output is truncated, narrow the search or save and inspect the complete output.
+
+State the scope of search-based conclusions.
+For example, write “No references to `old_name` remain in `src/`” when that is what the search establishes.
 
 # Check before writing that something is unavailable or impossible
 
@@ -222,16 +226,6 @@ Read the persistent status files.
 If no exit status exists, run `Verify launch`.
 If an exit status exists, verify expected process termination and final log output.
 Report the current state, then continue any remaining authorized work.
-
-# Grep and Glob: Scope every search
-
-The `no-unscoped-search.py` hook denies a recursive search rooted at the working tree, rooted in a dependency or build directory, or run with ignore rules off.
-
-# Never cut a search's output
-
-The `no-truncated-search.py` hook denies `head` and `tail` downstream of a search in the same pipeline.
-Treat every downstream line limiter, including `sed -n`, as cutting search output.
-Narrow the search until the whole output fits, or count the matches instead of listing them.
 
 # A program that modifies files must live in a file
 
