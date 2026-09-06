@@ -56,9 +56,10 @@ Apply this rule to prose in every context, including code comments, docstrings, 
 
 Trigger: Codex is about to write code.
 Use the existing plan when one is already written in a document or conversation messages; otherwise, present the plan before writing code.
+Continue after presenting the plan unless the approval condition below applies.
 Treat an instruction to implement the plan as approval for the entire plan, and complete it without asking for approval at each step unless the user explicitly reserves approval.
 
-Trigger: Codex is about to write code and the plan makes architectural changes that the user has not already approved.
+Trigger: the plan changes persistent data storage, public interfaces, or responsibility across project components beyond what the user has authorized.
 Show the code before and after with toy code examples.
 Ask the user for approval.
 Stop until the user approves the plan.
@@ -76,12 +77,11 @@ When presenting solutions, include only solutions that address the root cause of
 
 # Raise a contradiction instead of working around it
 
-Trigger: the user's requirements conflict, and the user's latest instruction does not resolve the conflict.
+Trigger: two explicit user requirements cannot both be satisfied, and the user's latest instruction does not resolve the conflict.
 Name the contradiction.
 Ask the user which requirement controls before writing code.
-Do not invent an exception that narrows the request.
-Do not coin a name for an exception.
 Stop until the user resolves the contradiction.
+When the request leaves a routine choice unspecified, choose using the conversation and continue.
 
 # Code smells
 
@@ -296,13 +296,15 @@ Do not treat a path as finished because the file reads well.
 
 # Require a clean baseline before implementation
 
-Trigger: Codex is about to implement a plan.
+Trigger: Codex is about to build a substantial new feature from scratch.
 Run `git status --short --untracked-files=all`.
+Inspect the listed changes to determine which concern the new feature and which concern a different feature or topic.
+Treat changes that concern the new feature as task input.
 Treat a listed path as intentionally uncommitted only when the user or repository instructions identify it as intentionally uncommitted.
 Unstage each staged intentionally uncommitted path.
 Leave each intentionally uncommitted path unchanged unless the user explicitly included it in the task.
-When the user explicitly includes a listed path in the task, inspect the existing diff and treat the existing change as task input.
-Report each remaining listed path and stop before implementation.
+Report changes that concern a different feature or topic and are not identified as intentionally uncommitted.
+If any such changes remain, stop before implementation.
 If the repository defines required CI checks, run the required CI checks.
 When a required CI check fails and the task requires fixing that failure, record the failing command and output before implementation.
 Report any other required CI check failure and stop before implementation.
@@ -314,10 +316,11 @@ Do not complete the task until the required CI check passes.
 Treat a completed, self-contained feature, fix, or refactor, including its tests and documentation, as one change.
 Complete the implementation steps within a change before starting its review cycle.
 
-Trigger: Codex has executed a task or plan, and `git status --short --untracked-files=all` lists a path changed by the task.
-Commit and review every path changed by the task.
+Trigger: Codex has completed a feature, fix, or refactor that changes repository files.
+Commit and review every path changed for that feature, fix, or refactor.
+Treat answers and comments saved by the app as task input unless the user requests changing or committing them.
 Do not include an intentionally uncommitted path unless the user explicitly included it in the task.
-Stop only when `git status --short --untracked-files=all` lists no path other than an intentionally uncommitted path, each intentionally uncommitted path is unstaged, and the Done gate passes.
+Finish the review cycle when every path included in the change is committed and the Done gate passes.
 
 Select reviewer agents for the completed change.
 Use no reviewer agent when the change preserves behavior and meaning, can be verified directly, and makes no consequential design choices; otherwise, use `commit-correctness-reviewer`.
