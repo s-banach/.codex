@@ -15,6 +15,12 @@
             "command": "python3 \"$HOME/.codex/hooks/no-python-outside-venv.py\"",
             "timeout": 10,
             "statusMessage": "Checking the interpreter against the project venv"
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.codex/hooks/no-cd.py\"",
+            "timeout": 10,
+            "statusMessage": "Checking that the command does not change directory"
           }
         ]
       }
