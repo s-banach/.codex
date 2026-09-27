@@ -1,5 +1,20 @@
+# Track AGENTS.md, hooks.json, the agents, and the hooks. Everything else here, config.toml included, is machine-local settings, session state, cache, or credentials.
+# Ignore every path, then re-include each committed file by name.
+# `*` also matches files inside a re-included directory, so each file there needs its own line.
 *
+
 !.gitignore
 !AGENTS.md
+!hooks.json
+
 !agents/
-!agents/*.toml
+!agents/implementation-reviewer.toml
+!agents/premise-reviewer.toml
+
+!hooks/
+!hooks/hook_testing.py
+!hooks/shell_parsing.py
+!hooks/no-python-outside-venv.py
+!hooks/no-python-outside-venv-test.py
+!hooks/no-unscoped-search.py
+!hooks/no-unscoped-search-test.py
