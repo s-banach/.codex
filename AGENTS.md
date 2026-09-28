@@ -45,8 +45,9 @@ Applies to all prose: chat, comments, docstrings, commits, PRs, docs.
 
 ## Shell commands
 
-- Never `cd`, `pushd`, or `popd`, and leave `workdir` unset, because the hooks see only the session directory. Use absolute paths, or the program's own directory flag (`git -C <dir>`, `uv run --directory <dir>`).
+- Never `cd`, `pushd`, or `popd`, and leave `workdir` unset, because `bash-rules.py` sees only the session directory. Use absolute paths, or the program's own directory flag (`git -C <dir>`, `uv run --directory <dir>`).
 - Chain only read-only commands with `&&`, `||`, or `;`. Run each command that changes files or state in its own call.
+- Never pipe a check (tests, linters, CI scripts) into `tail`: the rest of the output is lost, so seeing more means rerunning the check, and the pipeline's exit status is `tail`'s. To learn whether it passes, run `~/.codex/bin/run-check <command>`, which saves the full output to a log file and prints the exit status and the log's path, after the last 50 lines on failure. To see particular lines, search that log with `rg`. Otherwise, read the whole output.
 
 ## Planning and delegation
 

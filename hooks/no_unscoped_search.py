@@ -1,22 +1,13 @@
-#!/usr/bin/env python3
-"""PreToolUse hook for Bash: deny a search that is not `rg`, and an `rg` or file walk that names no scope.
+"""Rule for `bash-rules.py`: deny a search that is not `rg`, and an `rg` or file walk that names no scope.
 
-Reads the hook input JSON on stdin and writes a PreToolUse decision on stdout.
 AGENTS.md says to search with `rg`, never `grep`, so the grep family and the other searchers are denied outright; `git grep` is a git subcommand and is left alone.
 An `rg` given no path searches stdin when stdin is a pipe or file, and the working tree otherwise. Codex closes stdin for a command run without a tty, so an `rg` fed by no pipe either matches nothing in the empty stdin or walks the whole tree.
-The cost of a walk lives in the tree it walks, which this hook cannot see, so it judges the one thing the command text does show: whether the walk is bounded.
+The cost of a walk lives in the tree it walks, which this rule cannot see, so it judges the one thing the command text does show: whether the walk is bounded.
 An `rg` or a file walker is denied when its root is the whole working tree (`.`, `/`, `~`), when its root is a directory that holds dependencies or build output, or when a flag switches the walker's ignore rules off.
 A search given a subdirectory, named files, a depth cap, or a pipe is left alone.
 """
 
-from shell_parsing import (
-    deny,
-    iter_arguments,
-    program_name,
-    read_input,
-    resolve_head,
-    split_segments,
-)
+from shell_parsing import iter_arguments, program_name, resolve_head
 
 RIPGREP = {"rg", "ripgrep"}
 REPLACED_BY_RIPGREP = {"grep", "egrep", "fgrep", "rgrep", "zgrep", "ag", "ack", "ack-grep"}
@@ -27,7 +18,7 @@ INFO_OPTIONS = {"--version", "-V", "--help", "-h", "--type-list"}
 PATTERN_OPTIONS = {"-e", "-f", "--regexp", "--file"}
 # Roots that mean "everything from here".
 BROAD_ROOTS = {".", "./", "/", "~", "~/", "$HOME", "${HOME}", "*"}
-# Directories whose size is the reason this hook exists.
+# Directories whose size is the reason this rule exists.
 HEAVY_DIRS = {
     ".venv", "venv", "env", "node_modules", "target", "build", "dist", "vendor",
     ".git", ".tox", ".mypy_cache", ".pytest_cache", "__pycache__",
@@ -134,7 +125,7 @@ def ripgrep_verdict(head, args, reads_pipe):
     return f"`{head}` with no path either matches nothing in an empty stdin or walks the whole tree. {ALTERNATIVE}"
 
 
-def verdict(segment):
+def segment_verdict(segment):
     """Return the reason this segment is denied, or None."""
     word, args = resolve_head(segment.text)
     if word is None:
@@ -149,13 +140,6 @@ def verdict(segment):
     return None
 
 
-def main():
-    command, _ = read_input()
-    for segment in split_segments(command):
-        reason = verdict(segment)
-        if reason:
-            deny(reason)
-
-
-if __name__ == "__main__":
-    main()
+def verdict(segments, cwd):
+    """Return the reason the command is denied, or None."""
+    return next(filter(None, map(segment_verdict, segments)), None)

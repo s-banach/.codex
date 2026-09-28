@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Reading a Bash command, and answering the PreToolUse caller, shared by the hooks here.
+"""Reading a Bash command, and answering the PreToolUse caller, shared by `bash-rules.py` and its rules.
 
-Each hook decides what a command means.
+Each rule decides what a command means.
 This module decides where the command's parts begin and end, and how a decision reaches the PreToolUse caller.
-A hook imports it by name because Python puts the running script's directory first on `sys.path`.
+A rule imports it by name because Python puts the running script's directory first on `sys.path`.
 """
 
 import json
+import os
 import re
 import sys
 from functools import partial, reduce
+from pathlib import Path
 from typing import NamedTuple
 
 # A redirection, with its target attached (`2>log`) or in the next argument (`2> log`).
@@ -21,9 +23,9 @@ HEREDOC = re.compile(r"<<(?P<dash>-?)[ \t]*(?P<word>(?:'[^']*'|\"[^\"]*\"|\\.|[^
 # A quoted or backslash-escaped piece of a heredoc word; the group that matched holds the text it stands for.
 QUOTED_PIECE = re.compile(r"'([^']*)'|\"([^\"]*)\"|\\(.)")
 
-# Words to skip when locating the head of a segment.
+# Program names to skip when locating the head of a segment, whatever directory the word names them from.
 PREFIXES = {
-    "sudo", "command", "time", "nice", "nohup", "builtin", "exec", "xargs",
+    "sudo", "command", "time", "nice", "nohup", "builtin", "exec", "xargs", "run-check",
     "env", "if", "elif", "while", "until", "then", "do", "else", "!", "{",
 }
 
@@ -196,7 +198,7 @@ def split_words(segment):
 
 
 def unquote(word):
-    """Remove shell quote characters and backslash escapes, so `"."`, `'.'`, and `\.` all compare equal to `.`."""
+    r"""Remove shell quote characters and backslash escapes, so `"."`, `'.'`, and `\.` all compare equal to `.`."""
     return word.replace("'", "").replace('"', "").replace("\\", "")
 
 
@@ -229,8 +231,8 @@ def resolve_head(segment):
         if "=" in word.split("/")[0] and not word.startswith("="):
             words = words[1:]  # leading VAR=value assignment
             continue
-        if word in PREFIXES:
-            if word == "command" and queries_location(words[1:]):
+        if program_name(word) in PREFIXES:
+            if program_name(word) == "command" and queries_location(words[1:]):
                 return None, []  # prints where a program lives, runs nothing
             words, saw_prefix = words[1:], True
             continue
@@ -276,7 +278,7 @@ def iter_arguments(args, value_flags=()):
 
 
 def read_input():
-    """Return (the Bash command, the whole hook input) read from stdin.
+    """Return (the Bash command, the resolved directory it starts in) read from the hook input on stdin.
 
     Exits 0, which allows the command, when stdin holds no JSON object: a hook
     that cannot read its input has nothing to say about the command.
@@ -287,7 +289,8 @@ def read_input():
         sys.exit(0)
     if not isinstance(payload, dict):
         sys.exit(0)
-    return (payload.get("tool_input") or {}).get("command") or "", payload
+    command = (payload.get("tool_input") or {}).get("command") or ""
+    return command, Path(payload.get("cwd") or os.getcwd()).resolve()
 
 
 def deny(reason):

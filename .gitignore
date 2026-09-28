@@ -1,4 +1,4 @@
-# Track AGENTS.md, hooks.json, the agents, and the hooks. Everything else here, config.toml included, is machine-local settings, session state, cache, or credentials.
+# Track AGENTS.md, hooks.json, run-check, the agents, and the hooks. Everything else here, config.toml included, is machine-local settings, session state, cache, or credentials.
 # Ignore every path, then re-include each committed file by name.
 # `*` also matches files inside a re-included directory, so each file there needs its own line.
 *
@@ -7,6 +7,9 @@
 !AGENTS.md
 !hooks.json
 
+!bin/
+!bin/run-check
+
 !agents/
 !agents/implementation-reviewer.toml
 !agents/premise-reviewer.toml
@@ -14,9 +17,13 @@
 !hooks/
 !hooks/hook_testing.py
 !hooks/shell_parsing.py
-!hooks/no-python-outside-venv.py
-!hooks/no-python-outside-venv-test.py
-!hooks/no-unscoped-search.py
-!hooks/no-unscoped-search-test.py
-!hooks/no-cd.py
-!hooks/no-cd-test.py
+!hooks/bash-rules.py
+!hooks/bash_rules_test.py
+!hooks/no_python_outside_venv.py
+!hooks/no_python_outside_venv_test.py
+!hooks/no_unscoped_search.py
+!hooks/no_unscoped_search_test.py
+!hooks/no_cd.py
+!hooks/no_cd_test.py
+!hooks/no_chained_commit.py
+!hooks/no_chained_commit_test.py
